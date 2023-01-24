@@ -79,6 +79,46 @@ export function genEnablePasswordCommands(authPageIdx = 0x29) {
   };
 }
 
+
+export function genDisablePasswordCommands(authPageIdx = 0x29) {
+    return {
+      description:
+        'Verify Password\n\nWhen accessing to the protected memory, you should send password to make sure the authentication is successful.',
+      payload: {
+        tech: 'NfcA',
+        value: [
+          {
+            type: 'command',
+            payload: [0x1b, 0, 0, 0, 0],
+          },
+          {
+            type: 'command', // set the starting page
+            payload: [0xa2, authPageIdx, 0, 0, 0, 0],
+          },
+          ],
+      },
+  
+      parameters: [
+        {name: 'Password (4 bytes)', length: 4},
+        {name: 'Password Ack (2 bytes)', length: 2},
+        {name: 'Start Block (1 byte)', length: 1},
+      ],
+    
+      onParameterChanged: ({parameters, commands}) => {
+        const [password, pack, startBlock] = parameters;
+        const nextCommands = cloneDeep(commands);
+        nextCommands[0].payload[1] = password.payload[0] || 0;
+        nextCommands[0].payload[2] = password.payload[1] || 0;
+        nextCommands[0].payload[3] = password.payload[2] || 0;
+        nextCommands[0].payload[4] = password.payload[3] || 0;
+//        nextCommands[1].payload[5] = startBlock.payload[0] || 0;
+        nextCommands[1].payload[5] = 0xFF || 0;
+return nextCommands;
+      },
+    };
+  }
+
+
 export function genVerifyPasswordCommands() {
   return {
     description:
@@ -112,9 +152,14 @@ const enablePassword = {
   ...genEnablePasswordCommands(),
 };
 
+const disablePassword = {
+  name: 'nxp213-disable-pass',
+  ...genDisablePasswordCommands(),
+};
+
 const verifyPassword = {
   name: 'nxp213-verify-pass',
   ...genVerifyPasswordCommands(),
 };
 
-export {enablePassword, verifyPassword};
+export {enablePassword, disablePassword, verifyPassword};

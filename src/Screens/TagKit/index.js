@@ -129,6 +129,18 @@ function TagKitScreen(props) {
           }}
         />
         <List.Item
+          title="Disable password"
+          description="Disable password protection"
+          left={NfcIcons.TransceiveIcon}
+          onPress={() => {
+            navigation.navigate('CustomTransceive', {
+              title: 'Disable password protection',
+              readOnly: true,
+              savedRecord: Ntag215.disablePassword,
+            });
+          }}
+        />
+        <List.Item
           title="Verify password"
           description="Verify password"
           left={NfcIcons.TransceiveIcon}

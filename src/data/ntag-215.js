@@ -1,8 +1,13 @@
-import {genEnablePasswordCommands, genVerifyPasswordCommands} from './ntag-213';
+import {genEnablePasswordCommands, genDisablePasswordCommands, genVerifyPasswordCommands} from './ntag-213';
 
 const enablePassword = {
   name: 'nxp215-enable-pass',
   ...genEnablePasswordCommands(0x83),
+};
+
+const disablePassword = {
+  name: 'nxp215-disable-pass',
+  ...genDisablePasswordCommands(0x83),
 };
 
 const verifyPassword = {
@@ -10,4 +15,4 @@ const verifyPassword = {
   ...genVerifyPasswordCommands(),
 };
 
-export {enablePassword, verifyPassword};
+export {enablePassword,disablePassword, verifyPassword};
